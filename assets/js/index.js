@@ -44,6 +44,7 @@ class AppCalcularDesconto{
             customElemnt.addEventListener('focusout', ()=> {
                 this.section.querySelector('.custom').classList.remove('customInFocus')
                 this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
+                if(!customElemnt.value) return
                 if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
                 this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
                 this.valid = true
@@ -53,6 +54,7 @@ class AppCalcularDesconto{
             if(event.keyCode === 13 ) {
                 this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
                 if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
+                if(!customElemnt.value) return
                 this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
                 this.valid = true
             }
