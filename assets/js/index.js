@@ -11,7 +11,7 @@ class AppCalcularDesconto{
         this.calcular()
         this.total()
         this.inputsInFocus()
-        this.custon()
+        this.custom()
     }
     clickActved(element){
         element.classList.add('clickActived')
@@ -37,18 +37,24 @@ class AppCalcularDesconto{
         const descontoGorjeta = porcentagem
         return this.descontoValor = descontoGorjeta
     }
-    custon(){
+    custom(){
         const customElemnt = this.section.querySelector('#customInput')
         customElemnt.addEventListener('focusin', ()=>{
             this.section.querySelector('.custom').classList.add('customInFocus')
-            customElemnt.addEventListener('focusout', ()=> this.section.querySelector('.custom').classList.remove('customInFocus'))
+            customElemnt.addEventListener('focusout', ()=> {
+                this.section.querySelector('.custom').classList.remove('customInFocus')
+                this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
+                if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
+                this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
+                this.valid = true
+            })
         })
         customElemnt.addEventListener('keyup', event => {
             if(event.keyCode === 13 ) {
                 this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
+                if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
                 this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
                 this.valid = true
-                this.desconto()
             }
         })
     }
@@ -60,13 +66,15 @@ class AppCalcularDesconto{
             this.clickActved(calcularTotal)
             if(!this.valid) return this.err('Você tem que colocar uma porcentagem para realizar o calculo kkkk!!')
             this.desconto()
+            this.custom()
             if(!this.descontoValor && this.descontoValor !== 0) return this.err('Conta inválida kkkk')
 
-            const valorTotalGojetaPorPessoa =  Number(this.descontoValor / this.numberPeople.value)
-            if(valorTotalGojetaPorPessoa === Infinity || this.descontoValor == 0) return valorGojeta.innerHTML = this.descontoValor.toFixed(2)
+            let valorTotalGojetaPorPessoa =  Number(this.descontoValor / this.numberPeople.value) 
+            valorTotalGojetaPorPessoa === Infinity || !this.descontoValor ? valorTotalGojetaPorPessoa = this.descontoValor : valorTotalGojetaPorPessoa
             valorGojeta.innerHTML = valorTotalGojetaPorPessoa.toFixed(2)
 
-            const totalApagarGojeta = Number(valorTotalGojetaPorPessoa * this.numberPeople.value)
+            let totalApagarGojeta = Number(valorTotalGojetaPorPessoa * this.numberPeople.value)
+            totalApagarGojeta === 0 ? totalApagarGojeta = valorTotalGojetaPorPessoa : totalApagarGojeta
             valorTotalAPagarGojeta.innerHTML  = totalApagarGojeta.toFixed(2)
         })
     }
