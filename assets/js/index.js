@@ -40,7 +40,7 @@ class AppCalcularDesconto{
     customValid(customElemnt){
         this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
         if(!customElemnt.value) return
-        if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
+        if(!Number(customElemnt.value) && Number(customElemnt.value) !== 0) return this.err('No campo Custom é aceito somente números.')
         this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
         this.valid = true
     }
