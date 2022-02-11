@@ -49,6 +49,57 @@ class AppCalcularDesconto{
         customElemnt.addEventListener('focusin', ()=>{
             this.section.querySelector('.custom').classList.add('customInFocus')
         })
+class AppCalcularDesconto{
+    constructor(){
+        this.section = document.querySelector('section')
+        this.inputCalcular = this.section.querySelector('#calcular')
+        this.pocentagemAtual = this.section.querySelector('.pocentagemAtual')
+        this.numberPeople = this.section.querySelector('#numberPeople')
+        this.descontoValor = null
+        this.valid = false
+    }
+    init(){
+        this.calcular()
+        this.total()
+        this.inputsInFocus()
+        this.custom()
+    }
+    clickActved(element){
+        element.classList.add('clickActived')
+        setTimeout(()=>element.classList.remove('clickActived'), 500);
+    }
+    err(errText){
+        return setTimeout(() => alert(errText), 50)
+    }
+    calcular(){
+        this.section.addEventListener('click', event =>{
+            const element = event.target
+            if(element.className !== 'porcent') return
+            this.clickActved(element)
+            this.pocentActived(element)
+            this.pocentagemAtual.innerHTML = element.innerHTML
+            this.valid = true
+        })
+    }
+    desconto(){
+        const calculo = Number(this.inputCalcular.value)
+        const desconto = this.pocentagemAtual.innerHTML.slice(0,-1)
+        const porcentagem = calculo * desconto / 100
+        const descontoGorjeta = porcentagem
+        return this.descontoValor = descontoGorjeta
+    }
+    customValid(customElemnt){
+        this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
+        if(!customElemnt.value) return
+        if(!Number(customElemnt.value)) return this.err('No campo Custom é aceito somente números.')
+        this.pocentagemAtual.innerHTML = `${customElemnt.value}%`
+        this.valid = true
+    }
+    custom(){
+        const customElemnt = this.section.querySelector('#customInput')
+        customElemnt.addEventListener('focusin', ()=>{
+            this.section.querySelector('.custom').classList.add('customInFocus')
+        })
         customElemnt.addEventListener('focusout', ()=> {
             this.section.querySelector('.custom').classList.remove('customInFocus')
             this.customValid(customElemnt)
@@ -69,6 +120,8 @@ class AppCalcularDesconto{
             this.desconto()
             this.custom()
             if(!this.descontoValor && this.descontoValor !== 0) return this.err('Conta inválida kkkk')
+            if(!Number(this.numberPeople.value)) return this.errNumberPeople()
+            this.section.querySelector('.number-people').classList.remove('errNumberPeople')
 
             let valorTotalGojetaPorPessoa =  Number(this.descontoValor / this.numberPeople.value) 
             valorTotalGojetaPorPessoa === Infinity || !this.descontoValor ? valorTotalGojetaPorPessoa = this.descontoValor : valorTotalGojetaPorPessoa
@@ -95,6 +148,10 @@ class AppCalcularDesconto{
     pocentActived(element){
         this.section.querySelectorAll('.porcent').forEach(porcent => porcent.classList.remove('pocentActived'))
         element.classList.add('pocentActived')
+    }
+    errNumberPeople(){
+        this.section.querySelector('.number-people').classList.add('errNumberPeople')
+        this.err('Numero de pessoas inválido ou igual a zero.')
     }
 }
 
